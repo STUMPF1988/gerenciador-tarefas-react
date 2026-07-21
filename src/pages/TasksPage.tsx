@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 
 import Header from "../components/Header";
-import TaskForm from "../components/TaskForm";
 import TaskList from "../components/TaskList";
 
 import { taskService } from "../services/taskService";
@@ -40,22 +39,6 @@ function TasksPage() {
     }
   }
 
-  async function addTask(title: string) {
-    try {
-      setError("");
-
-      const newTask = await taskService.create(title);
-
-      setTasks((previousTasks) => [
-        ...previousTasks,
-        newTask,
-      ]);
-    } catch (error) {
-      console.error(error);
-      setError("Não foi possível adicionar a tarefa.");
-    }
-  }
-
   return (
     <Box>
       <Header
@@ -76,7 +59,6 @@ function TasksPage() {
           borderRadius: 3,
         }}
       >
-        <TaskForm onAddTask={addTask} />
 
         {error && (
           <Alert severity="error" sx={{ mt: 3 }}>
