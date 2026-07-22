@@ -14,8 +14,11 @@ function TaskList({ tasks }: TaskListProps) {
   return (
     <ul>
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} />
-      ))}
+      <TaskItem
+        key={task._id}
+        task={task}
+      />
+    ))}
     </ul>
   );
 }
