@@ -1,47 +1,27 @@
+import { api } from "./api";
+
 import type { Task } from "../types/Task";
 
-let mockedTasks: Task[] = [
-  {
-    id: 1,
-    title: "Estudar componentes React",
-    completed: true,
-  },
-  {
-    id: 2,
-    title: "Aprender useState",
-    completed: true,
-  },
-  {
-    id: 3,
-    title: "Aprender useEffect",
-    completed: false,
-  },
-];
-
-function simulateDelay(milliseconds = 500): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, milliseconds);
-  });
+interface CreateTaskRequest {
+  title: string;
+  completed?: boolean;
 }
 
 export const taskService = {
   async getAll(): Promise<Task[]> {
-    await simulateDelay();
+    const response = await api.get<Task[]>("/tasks");
 
-    return [...mockedTasks];
+    return response.data;
   },
 
   async create(title: string): Promise<Task> {
-    await simulateDelay();
-
-    const newTask: Task = {
-      id: Date.now(),
+    const body: CreateTaskRequest = {
       title,
       completed: false,
     };
 
-    mockedTasks = [...mockedTasks, newTask];
+    const response = await api.post<Task>("/tasks", body);
 
-    return newTask;
+    return response.data;
   },
 };
