@@ -6,6 +6,7 @@ import { Alert, Box, Paper, Typography } from "@mui/material";
 import Header from "../components/Header";
 import TaskForm from "../components/TaskForm";
 import { taskService } from "../services/taskService";
+import Footer from "../components/Footer";
 
 function NewTaskPage() {
   const navigate = useNavigate();
@@ -72,6 +73,10 @@ function NewTaskPage() {
           saving={saving}
         />
       </Paper>
+      <Footer
+        title="Desenvolvido por Stumpf Tech"
+        subtitle="2026"
+      />
     </Box>
   );
 }

@@ -10,7 +10,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   Paper,
+  Switch,
   TextField,
 } from "@mui/material";
 
@@ -20,6 +22,7 @@ import TaskList from "../components/TaskList";
 import { taskService } from "../services/taskService";
 
 import type { Task } from "../types/Task";
+import Footer from "../components/Footer";
 
 function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -32,6 +35,7 @@ function TasksPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [editedTitle, setEditedTitle] = useState("");
+  const [editedCompleted, setEditedCompleted] = useState(false);
 
   useEffect(() => {
     loadTasks();
@@ -56,6 +60,7 @@ function TasksPage() {
   function handleOpenEditModal(task: Task) {
     setSelectedTask(task);
     setEditedTitle(task.title);
+    setEditedCompleted(task.completed);
     setEditModalOpen(true);
   }
 
@@ -63,6 +68,7 @@ function TasksPage() {
     setEditModalOpen(false);
     setSelectedTask(null);
     setEditedTitle("");
+    setEditedCompleted(false);
   }
 
   function handleOpenDeleteModal(task: Task) {
@@ -81,17 +87,18 @@ function TasksPage() {
     }
 
     try {
-      await taskService.update(selectedTask._id, {
-        title: editedTitle.trim(),
-      });
+      const updatedTask = await taskService.update(
+        selectedTask._id,
+        {
+          title: editedTitle.trim(),
+          completed: editedCompleted,
+        }
+      );
 
       setTasks((currentTasks) =>
         currentTasks.map((task) =>
           task._id === selectedTask._id
-            ? {
-                ...task,
-                title: editedTitle.trim(),
-              }
+            ? updatedTask
             : task
         )
       );
@@ -186,6 +193,19 @@ function TasksPage() {
             onChange={(event) => setEditedTitle(event.target.value)}
             sx={{ mt: 1 }}
           />
+
+          <FormControlLabel
+            sx={{ mt: 2 }}
+            control={
+              <Switch
+                checked={editedCompleted}
+                onChange={(event) =>
+                  setEditedCompleted(event.target.checked)
+                }
+              />
+            }
+            label={editedCompleted ? "Concluída" : "Pendente"}
+          />
         </DialogContent>
 
         <DialogActions>
@@ -230,6 +250,10 @@ function TasksPage() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Footer
+        title="Desenvolvido por Stumpf Tech"
+        subtitle="2026"
+      />
     </Box>
   );
 }
