@@ -7,6 +7,11 @@ interface CreateTaskRequest {
   completed?: boolean;
 }
 
+interface UpdateTaskRequest {
+  title?: string;
+  completed?: boolean;
+}
+
 export const taskService = {
   async getAll(): Promise<Task[]> {
     const response = await api.get<Task[]>("/tasks");
@@ -23,5 +28,21 @@ export const taskService = {
     const response = await api.post<Task>("/tasks", body);
 
     return response.data;
+  },
+
+  async update(
+    id: string,
+    data: UpdateTaskRequest
+  ): Promise<Task> {
+    const response = await api.patch<Task>(
+      `/tasks/${id}`,
+      data
+    );
+
+    return response.data;
+  },
+
+  async delete(id: string): Promise<void> {
+    await api.delete(`/tasks/${id}`);
   },
 };
